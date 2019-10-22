@@ -4,11 +4,11 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import ZeusAppBar from "./ButtonAppBar";
 import ZeusTable from "./SimpleTable";
+import ResponsiveDrawer from "./SideBar";
 
 ReactDOM.render(
     <div>
-        <ZeusAppBar/>
-        <ZeusTable/>
+        <ResponsiveDrawer/>
     </div>,
     document.getElementById('root')
 );

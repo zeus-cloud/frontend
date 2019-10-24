@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import FileRestClient from "./FileRestClient";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -38,10 +39,7 @@ function createData(name, calories, fat, carbs, protein) {
     return {name, calories, fat, carbs, protein};
 }
 
-const rows = [
-    new Entity('Archivo0', 'Alejandro Bullrich', '17/07/2019', 24 + 'MB'),
-    new Entity('Archivo1', 'Macarena Lui', '12/06/2019', 24 + 'MB'),
-];
+const rows = FileRestClient.getAllFiles(1);
 
 function SimpleTable() {
     const classes = useStyles();

@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
 
 function Copyright() {
     return (
@@ -47,8 +48,17 @@ const useStyles = makeStyles(theme => ({
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
     },
+    toolbar: theme.mixins.toolbar,
+    content: {
+        paddingTop: '4em',
+        flexGrow: 1,
+        padding: theme.spacing(3),
+    },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    snackbar: {
+        margin: theme.spacing(1),
     },
 }));
 
@@ -64,24 +74,25 @@ class Login extends React.Component {
         }
     }
 
-    renderRedirect = () => {
+    renderRedirect = e => {
+        e.preventDefault();
         this.setState({
             redirectToReferrer: true
         });
     }
 
-    handleEmailChange =(e) => {
-        this.setState({email: e.target.value});
-    }
-    handlePasswordChange = (e) => {
-        this.setState({password: e.target.value});
+    handleChange = (e) => {
+        if (this.state.error) {
+            this.setState({error: false})
+        }
+        this.setState({[e.target.name]: e.target.value});
     }
 
     render() {
 
         const redirectToReferrer = this.state.redirectToReferrer;
         if (redirectToReferrer === true) {
-            if(this.state.email === "gato" && this.state.password === "gato") {
+            if (this.state.email === "gato" && this.state.password === "gato") {
                 this.props.history.push('/home')
             } else {
                 this.setState({
@@ -92,8 +103,9 @@ class Login extends React.Component {
         }
 
         return (
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" className={useStyles.content}>
                 <CssBaseline/>
+                <div className={useStyles.toolbar} />
                 <div className={useStyles.paper}>
                     <Avatar className={useStyles.avatar}>
                         <LockOutlinedIcon/>
@@ -112,7 +124,7 @@ class Login extends React.Component {
                             label="Email Address"
                             name="email"
                             autoFocus
-                            onBlur={this.handleEmailChange}
+                            onKeyUp={this.handleChange}
                         />
                         <TextField
                             variant="outlined"
@@ -123,7 +135,7 @@ class Login extends React.Component {
                             label="Password"
                             type="password"
                             id="password"
-                            onBlur={this.handlePasswordChange}
+                            onChange={this.handleChange}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
@@ -138,13 +150,11 @@ class Login extends React.Component {
                         >
                             Sign In
                         </Button>
-                        <a>{() => {
-                            var errorMessage = null;
-                            if (this.state.error) {
-                                errorMessage = "Incorrect Email or Password."
-                            }
-                            return errorMessage;
-                        }}</a>
+                        {this.state.error ?
+                            <SnackbarContent
+                                className={useStyles.snackbar}
+                                message='Por favor, intent&eacute; con: gato, gato'
+                            /> : null}
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">

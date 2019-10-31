@@ -21,7 +21,9 @@ import CloudIcon from '@material-ui/icons/Cloud';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import Button from '@material-ui/core/Button';
-import Redirect from "react-router-dom/es/Redirect";
+import {Modal} from "@material-ui/core";
+import { Redirect } from "react-router-dom";
+import ZeusModal from "./ZeusModal";
 
 const drawerWidth = 240;
 
@@ -72,6 +74,7 @@ function ResponsiveDrawer(props) {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [redirect, setRedirect] = React.useState(false);
+    const [fileUpload, setFileUpload] = React.useState(false);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -86,6 +89,15 @@ function ResponsiveDrawer(props) {
             return <Redirect to='/login' />
         }
     };
+
+    const openFileUploaderModal = () => {
+        console.log(fileUpload);
+        return setFileUpload(true);
+    };
+
+    const callbackFunction = (childData) => {
+        return setFileUpload(childData);
+    }
 
     const drawer = (
         <div>
@@ -114,7 +126,7 @@ function ResponsiveDrawer(props) {
                 <ListItemIcon><DeleteIcon/></ListItemIcon>
                 <ListItemText primary='Papelera'/>
             </ListItem>
-            <ListItem button key='Agregar archivo'>
+            <ListItem button key='Agregar archivo' onClick={openFileUploaderModal}>
                 <ListItemIcon><AddIcon/></ListItemIcon>
                 <ListItemText primary='Agregar archivo'/>
             </ListItem>
@@ -123,6 +135,13 @@ function ResponsiveDrawer(props) {
 
     return (
         <div className={classes.root}>
+            <div>
+                {fileUpload ?
+                    <ZeusModal
+                        parentCallback={callbackFunction}
+                        open={true}
+                    /> : null}
+            </div>
             <CssBaseline/>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>

@@ -31,30 +31,37 @@ const FileRestClient = {
     },
 
     uploadFile: function (fileData, fileName) {
-        return fetch('http://172.19.0.60:8085/gato/folder', {
+
+        const bufferDto = {
+            type: "Buffer",
+            data: new Int8Array(fileData)
+        };
+
+        let jsonObject = {
+            postMongo: {
+                directory: [{
+                    logical_path: "./test.txt"
+                }],
+                shared: [],
+                _id: "5db8bb333a9f7335c4d91373",
+                user: "5db8bb333a9f7335c4d91372",
+                __v: 0
+            },
+            stream: {
+                originalname: fileName,
+                buffer: bufferDto
+            }
+        };
+
+        console.log(jsonObject);
+
+        return fetch('http://10.30.129.72/gato/folder', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                postMongo: {
-                    directory: [{
-                        logical_path: "./test.txt"
-                    }],
-                    shared: [],
-                    _id: "5db8bb333a9f7335c4d91373",
-                    user: "5db8bb333a9f7335c4d91372",
-                    __v: 0
-                },
-                stream: {
-                    archivo: fileName,
-                    buffer: {
-                        type: "Buffer",
-                        data: [fileData]
-                    }
-                }
-            })
+            body: jsonObject
         })
     }
 };

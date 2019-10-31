@@ -53,9 +53,9 @@ export class ZeusModal extends React.Component {
             reader.readAsArrayBuffer(files[0]);
 
             reader.onload = (e) => {
-                console.log(new Int8Array(e.target.result));
+                console.log(e.target.result);
                 this.setState({
-                    readyFile: new Int8Array(e.target.result),
+                    readyFile: e.target.result,
                     fileName: files[0].name
                 })
             }
@@ -68,7 +68,7 @@ export class ZeusModal extends React.Component {
     };
 
     uploadFile = () => {
-        FileRestClient.uploadFile(this.state.readyFile)
+        FileRestClient.uploadFile(this.state.readyFile, this.state.fileName)
             .then(response => alert("Archivo subido exitosamente " + response));
     };
 

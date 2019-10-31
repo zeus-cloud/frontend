@@ -8,7 +8,7 @@ class Entity {
 }
 
 const FileRestClient = {
-    getAllFiles: function(uid) {
+    getAllFiles: function (uid) {
 
         const rows = [];
 
@@ -25,24 +25,35 @@ const FileRestClient = {
         //    .then(res => res.json())
     },
 
-    getFile: function(value) {
+    getFile: function (value) {
         fetch('http://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
     },
 
-    uploadFile: function(fileData, fileName) {
-        return fetch('https://mywebsite.com/endpoint/', {
+    uploadFile: function (fileData, fileName) {
+        return fetch('http://172.19.0.60:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                archivo: fileName,
-                buffer: {
-                    type: "Buffer",
-                    data: [fileData]
+                postMongo: {
+                    directory: [{
+                        logical_path: "./test.txt"
+                    }],
+                    shared: [],
+                    _id: "5db8bb333a9f7335c4d91373",
+                    user: "5db8bb333a9f7335c4d91372",
+                    __v: 0
                 },
+                stream: {
+                    archivo: fileName,
+                    buffer: {
+                        type: "Buffer",
+                        data: [fileData]
+                    }
+                }
             })
         })
     }

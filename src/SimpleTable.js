@@ -41,7 +41,10 @@ function createData(name, calories, fat, carbs, protein) {
     return {name, calories, fat, carbs, protein};
 }
 
-const rows = FileRestClient.getAllFiles(1);
+const rows = [];
+
+FileRestClient.getAllFiles("gato")
+    .then(response => response.forEach(file => this.rows.push(file)));
 
 class SimpleTable extends React.Component {
 

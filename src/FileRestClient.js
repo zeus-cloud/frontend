@@ -28,6 +28,23 @@ const FileRestClient = {
     getFile: function(value) {
         fetch('http://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
+    },
+
+    uploadFile: function(fileData, fileName) {
+        return fetch('https://mywebsite.com/endpoint/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                archivo: fileName,
+                buffer: {
+                    type: "Buffer",
+                    data: [fileData]
+                },
+            })
+        })
     }
 };
 

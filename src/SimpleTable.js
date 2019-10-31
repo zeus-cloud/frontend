@@ -64,10 +64,6 @@ class SimpleTable extends React.Component {
 
     openContextMenu = (event, row) => {
         event.preventDefault();
-        console.log("Menu");
-        console.log(event.clientX - 2);
-        console.log(event.clientY - 4);
-        console.log(row);
         this.setState({
             showContextMenu: true,
             clientX: event.clientX - 2,

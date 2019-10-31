@@ -10,6 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
+import AddIcon from '@material-ui/icons/Add';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
@@ -19,6 +20,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CloudIcon from '@material-ui/icons/Cloud';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import Button from '@material-ui/core/Button';
+import Redirect from "react-router-dom/es/Redirect";
 
 const drawerWidth = 240;
 
@@ -57,7 +60,10 @@ const useStyles = makeStyles(theme => ({
     },
     centered: {
         textAlign: 'center',
-    }
+    },
+    title: {
+        flexGrow: 1,
+    },
 }));
 
 function ResponsiveDrawer(props) {
@@ -65,9 +71,20 @@ function ResponsiveDrawer(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [redirect, setRedirect] = React.useState(false);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
+    };
+
+    const logout = () => {
+        return setRedirect(true);
+    };
+
+    const renderRedirect = () => {
+        if (redirect) {
+            return <Redirect to='/login' />
+        }
     };
 
     const drawer = (
@@ -97,6 +114,10 @@ function ResponsiveDrawer(props) {
                 <ListItemIcon><DeleteIcon/></ListItemIcon>
                 <ListItemText primary='Papelera'/>
             </ListItem>
+            <ListItem button key='Agregar archivo'>
+                <ListItemIcon><AddIcon/></ListItemIcon>
+                <ListItemText primary='Agregar archivo'/>
+            </ListItem>
         </div>
     );
 
@@ -114,9 +135,11 @@ function ResponsiveDrawer(props) {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.title}>
                         Zeus Cloud Storage
                     </Typography>
+                    <Button color="inherit" onClick={logout}>Logout</Button>
+                    {renderRedirect()}
                 </Toolbar>
             </AppBar>
             <nav className={classes.drawer} aria-label="mailbox folders">

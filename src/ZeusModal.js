@@ -1,6 +1,8 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import Button from "@material-ui/core/Button";
+import FileRestClient from "./FileRestClient";
 
 function getModalStyle() {
     return {
@@ -31,13 +33,43 @@ export class ZeusModal extends React.Component {
         super(props);
         this.state = {
             open: false,
-            test: getModalStyle()
+            test: getModalStyle(),
+            readyFile: false,
+            fileName: ""
         }
     }
 
 
     handleClose = () => {
         this.props.parentCallback(false)
+    };
+
+    prepareFile = e => {
+        let files = e.target.files;
+
+        if (files.length > 0) {
+            let reader = new FileReader();
+
+            reader.readAsArrayBuffer(files[0]);
+
+            reader.onload = (e) => {
+                console.log(new Int8Array(e.target.result));
+                this.setState({
+                    readyFile: new Int8Array(e.target.result),
+                    fileName: files[0].name
+                })
+            }
+        } else {
+            this.setState({
+                readyFile: false,
+                fileName: ""
+            })
+        }
+    };
+
+    uploadFile = () => {
+        FileRestClient.uploadFile(this.state.readyFile)
+            .then(alert("Archivo subido exitosamente"));
     };
 
     render() {
@@ -50,7 +82,18 @@ export class ZeusModal extends React.Component {
             >
                 <div style={this.state.test} className={classes.paper}>
                     <h2 id="simple-modal-title">Subí tu archivo!!</h2>
-                    <input style={{paddingBottom: 1 + 'em' }} type="file" name="file"/>
+                    <input style={{paddingBottom: 1 + 'em'}} type="file" name="file" onChange={this.prepareFile}/>
+
+                    {this.state.readyFile ?
+                        <Button
+                            type="button"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={this.uploadFile}
+                        >
+                            Subir
+                        </Button> : null}
                 </div>
             </Modal>
         );

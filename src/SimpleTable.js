@@ -41,11 +41,6 @@ function createData(name, calories, fat, carbs, protein) {
     return {name, calories, fat, carbs, protein};
 }
 
-const rows = [];
-
-FileRestClient.getAllFiles("gato")
-    .then(response => response.forEach(file => this.rows.push(file)));
-
 class SimpleTable extends React.Component {
 
     constructor(props) {
@@ -57,13 +52,26 @@ class SimpleTable extends React.Component {
             error: false,
             showContextMenu: false,
             clientX: null,
-            clientY: null
-        }
+            clientY: null,
+            rows: []
+        };
+
+        FileRestClient.getAllFiles("gato")
+            .then(response => response.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
+                Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB'))));
+
+        /* for (var i = 0; i < 100; i++) {
+            if (i % 2 === 0) {
+                this.state.rows.push(new Entity('Archivo' + i, 'Alejandro Bullrich', '17/07/2019', 24 + 'MB'));
+            } else {
+                this.state.rows.push(new Entity('Archivo' + i, 'Macarena Lui', '12/06/2019', 24 + 'MB'));
+            }
+        } */
     }
 
     callbackFunction = (childData) => {
         this.setState({showContextMenu: childData})
-    }
+    };
 
     openContextMenu = (event, row) => {
         event.preventDefault();
@@ -96,7 +104,7 @@ class SimpleTable extends React.Component {
                             /> : null}
                     </div>
                     <TableBody>
-                        {rows.map(row => (
+                        {this.state.rows.map(row => (
                             <TableRow key={row.name} onContextMenu={event => this.openContextMenu(event, row)}>
                                 <TableCell component="th" scope="row">
                                     {row.name}

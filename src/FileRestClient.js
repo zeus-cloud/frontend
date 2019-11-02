@@ -10,14 +10,14 @@ class Entity {
 const FileRestClient = {
     getAllFiles: function (uid) {
 
-        return fetch(`http://179.19.0.60:8085/${uid}/folder`, {
+        return fetch(`http://localhost:8085/${uid}/folder`, {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Accept': 'multipart/form-data',
-                'Content-Type': 'multipart/form-data'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-        })
+        }).then(respons => respons.json());
     },
 
     getFile: function (value) {
@@ -29,7 +29,7 @@ const FileRestClient = {
 
         const bufferDto = {
             type: "Buffer",
-            data: new Int8Array(fileData)
+            data: fileData
         };
 
         let jsonObject = {
@@ -44,20 +44,20 @@ const FileRestClient = {
             },
             stream: {
                 originalname: fileName,
-                buffer: bufferDto
+                buffer: Buffer.from(fileData, 'utf-8')
             }
         };
 
-        console.log(jsonObject);
+        console.log(JSON.stringify(jsonObject));
 
-        return fetch('http://179.19.0.60:8085/gato/folder', {
+        return fetch('http://localhost:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Accept': 'multipart/form-data',
                 'Content-Type': 'multipart/form-data'
             },
-            body: jsonObject
+            body: JSON.stringify(jsonObject)
         })
     }
 };

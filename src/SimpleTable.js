@@ -57,8 +57,14 @@ class SimpleTable extends React.Component {
         };
 
         FileRestClient.getAllFiles("gato")
-            .then(response => response.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
-                Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB'))));
+            .then(function(response) {
+                console.log("SimpleTAble");
+                console.log(response);
+                response.data[0].directory
+                    .forEach(file => this.state.rows.push(
+                        new Entity(file, "gato", new Date(), Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')
+                    ))
+                });
 
         /* for (var i = 0; i < 100; i++) {
             if (i % 2 === 0) {

@@ -69,7 +69,10 @@ export class ZeusModal extends React.Component {
 
     uploadFile = () => {
         FileRestClient.uploadFile(this.state.readyFile, this.state.fileName)
-            .then(response => alert("Archivo subido exitosamente " + response));
+            .then(response => {
+                this.handleClose();
+                alert("Archivo subido exitosamente " + response);
+            });
     };
 
     render() {

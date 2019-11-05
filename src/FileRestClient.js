@@ -1,12 +1,3 @@
-class Entity {
-    constructor(name, owner, lastModification, fileSize) {
-        this.name = name;
-        this.owner = owner;
-        this.lastModification = lastModification;
-        this.fileSize = fileSize;
-    }
-}
-
 const FileRestClient = {
     getAllFiles: function (uid) {
 
@@ -27,19 +18,21 @@ const FileRestClient = {
 
     uploadFile: function (fileData, fileName) {
 
+        const fileDataArray = Array.prototype.slice.call(new Int8Array(fileData));
+
         const bufferDto = {
             type: "Buffer",
-            data: new Int8Array(fileData)
+            data: fileDataArray
         };
 
         let jsonObject = {
             postMongo: {
                 directory: [{
-                    logical_path: "./test.txt"
+                    logical_path: fileName
                 }],
                 shared: [],
-                _id: "5db8bb333a9f7335c4d91373",
-                user: "5db8bb333a9f7335c4d91372",
+                _id: "5dc1990691f92a1ebad703c1",
+                user: "5dc1990691f92a1ebad703c0",
                 __v: 0
             },
             stream: {
@@ -48,16 +41,14 @@ const FileRestClient = {
             }
         };
 
-        console.log(jsonObject);
-
         return fetch('http://localhost:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Accept': 'multipart/form-data',
-                'Content-Type': 'multipart/form-data'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: jsonObject
+            body: JSON.stringify(jsonObject)
         })
     }
 };

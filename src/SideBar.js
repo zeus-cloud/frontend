@@ -91,13 +91,13 @@ function ResponsiveDrawer(props) {
     };
 
     const openFileUploaderModal = () => {
-        console.log(fileUpload);
         return setFileUpload(true);
     };
 
     const callbackFunction = (childData) => {
-        return setFileUpload(childData);
-    }
+        setFileUpload(childData);
+
+    };
 
     const drawer = (
         <div>

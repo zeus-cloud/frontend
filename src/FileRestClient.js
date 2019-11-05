@@ -10,7 +10,7 @@ class Entity {
 const FileRestClient = {
     getAllFiles: function (uid) {
 
-        return fetch(`http://179.19.0.60:8085/${uid}/folder`, {
+        return fetch(`http://localhost:8085/${uid}/folder`, {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -50,7 +50,7 @@ const FileRestClient = {
 
         console.log(jsonObject);
 
-        return fetch('http://179.19.0.60:8085/gato/folder', {
+        return fetch('http://localhost:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',

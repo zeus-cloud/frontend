@@ -26,6 +26,9 @@ const classes = makeStyles(theme => ({
     title: {
         flexGrow: 1,
     },
+    snackbar: {
+        margin: theme.spacing(1),
+    }
 }));
 
 class Entity {
@@ -50,6 +53,7 @@ class SimpleTable extends React.Component {
             email: "",
             password: "",
             error: false,
+            errorMessage: "",
             showContextMenu: false,
             clientX: null,
             clientY: null,
@@ -57,8 +61,33 @@ class SimpleTable extends React.Component {
         };
 
         FileRestClient.getAllFiles("gato")
-            .then(response => response.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
-                Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB'))));
+            .then(unprocessedResponse =>
+                unprocessedResponse.json().then(data => ({
+                        data: data,
+                        status: unprocessedResponse.status
+                    })
+                ).then(res => {
+                    if (res.data !== null) {
+                        const response = res.data;
+                        if (response.data.length > 0) {
+                            res.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
+                                Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
+                        }
+
+                        if (response.errors.length > 0) {
+                            console.error(response.errors[0].message)
+                            this.setState({
+                                error: true,
+                                errorMessage: "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde."
+                            });
+                        } else {
+                            this.setState({
+                                error: false,
+                                errorMessage: ""
+                            });
+                        }
+                    }
+                }));
 
         /* for (var i = 0; i < 100; i++) {
             if (i % 2 === 0) {
@@ -86,6 +115,12 @@ class SimpleTable extends React.Component {
     render() {
         return (
             <Paper className={classes.root}>
+                { this.state.error ?
+                <SnackbarContent
+                    className={classes.snackbar}
+                    message={this.state.errorMessage}
+                />
+                :
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
@@ -115,7 +150,7 @@ class SimpleTable extends React.Component {
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+                </Table> }
             </Paper>
         );
     }

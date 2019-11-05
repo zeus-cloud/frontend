@@ -1,4 +1,10 @@
 const FileRestClient = {
+    fileRestStore: {
+        files: [],
+        error: false,
+        errorMessage: ""
+    },
+
     getAllFiles: function (uid) {
 
         return fetch(`http://localhost:8085/${uid}/folder`, {
@@ -9,6 +15,23 @@ const FileRestClient = {
                 'Content-Type': 'application/json'
             },
         }).then(unprocessedResponse => unprocessedResponse.json())
+            .then(response => {
+                if (response.data !== null) {
+                    if (response.data.length > 0) {
+                        response.data[0][0].directory.forEach(file => this.fileRestStore.files.push(file));
+                    }
+
+                    if (response.errors.length > 0) {
+                        console.error(response.errors[0].message);
+                        this.fileRestStore.error = true;
+                        this.fileRestStore.errorMessage = "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde.";
+                    } else {
+                        this.fileRestStore.error = false;
+                        this.fileRestStore.errorMessage = "";
+                    }
+                }
+                return this.fileRestStore;
+            });
     },
 
     getFile: function (value) {
@@ -24,12 +47,11 @@ const FileRestClient = {
             type: "Buffer",
             data: fileDataArray
         };
+        this.fileRestStore.files.push({ logical_path: fileName });
 
         let jsonObject = {
             postMongo: {
-                directory: [{
-                    logical_path: fileName
-                }],
+                directory: this.fileRestStore.files,
                 shared: [],
                 _id: "5dc1990691f92a1ebad703c1",
                 user: "5dc1990691f92a1ebad703c0",

@@ -74,18 +74,19 @@ class SimpleTable extends React.Component {
     populateTable = () => {
         FileRestClient.getAllFiles("gato")
             .then(response => {
-                if (response.data !== null) {
-                    if (response.data.length > 0) {
-                        response.data[0][0].directory.forEach(file => console.log(file.logical_path));
-                        response.data[0][0].directory.forEach(file => this.state.rows.push(new Entity(file.logical_path, "gato", new Date().toLocaleDateString(),
+                console.log("response: " + JSON.stringify(response));
+                if (response) {
+                    if (response.files.length > 0) {
+                        response.files.forEach(file => console.log(file));
+                        response.files.forEach(file => this.state.rows.push(new Entity(file.logical_path, "gato", new Date().toLocaleDateString(),
                             Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
                     }
 
-                    if (response.errors.length > 0) {
-                        console.error(response.errors[0].message);
+                    if (response.error) {
+                        console.error(response.errorMessage);
                         this.setState({
                             error: true,
-                            errorMessage: "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde."
+                            errorMessage: response.errorMessage
                         });
                     } else {
                         this.setState({

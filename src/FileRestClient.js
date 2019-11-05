@@ -1,13 +1,10 @@
-class Entity {
-    constructor(name, owner, lastModification, fileSize) {
-        this.name = name;
-        this.owner = owner;
-        this.lastModification = lastModification;
-        this.fileSize = fileSize;
-    }
-}
-
 const FileRestClient = {
+    fileRestStore: {
+        files: [],
+        error: false,
+        errorMessage: ""
+    },
+
     getAllFiles: function (uid) {
 
         return fetch(`http://localhost:8085/${uid}/folder`, {
@@ -18,6 +15,23 @@ const FileRestClient = {
                 'Content-Type': 'application/json'
             },
         }).then(unprocessedResponse => unprocessedResponse.json())
+            .then(response => {
+                if (response.data !== null) {
+                    if (response.data.length > 0) {
+                        response.data[0][0].directory.forEach(file => this.fileRestStore.files.push(file));
+                    }
+
+                    if (response.errors.length > 0) {
+                        console.error(response.errors[0].message);
+                        this.fileRestStore.error = true;
+                        this.fileRestStore.errorMessage = "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde.";
+                    } else {
+                        this.fileRestStore.error = false;
+                        this.fileRestStore.errorMessage = "";
+                    }
+                }
+                return this.fileRestStore;
+            });
     },
 
     getFile: function (value) {
@@ -27,19 +41,20 @@ const FileRestClient = {
 
     uploadFile: function (fileData, fileName) {
 
+        const fileDataArray = Array.prototype.slice.call(new Int8Array(fileData));
+
         const bufferDto = {
             type: "Buffer",
-            data: new Int8Array(fileData)
+            data: fileDataArray
         };
+        this.fileRestStore.files.push({ logical_path: fileName });
 
         let jsonObject = {
             postMongo: {
-                directory: [{
-                    logical_path: "./test.txt"
-                }],
+                directory: this.fileRestStore.files,
                 shared: [],
-                _id: "5db8bb333a9f7335c4d91373",
-                user: "5db8bb333a9f7335c4d91372",
+                _id: "5dc1990691f92a1ebad703c1",
+                user: "5dc1990691f92a1ebad703c0",
                 __v: 0
             },
             stream: {
@@ -48,16 +63,14 @@ const FileRestClient = {
             }
         };
 
-        console.log(jsonObject);
-
         return fetch('http://localhost:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Accept': 'multipart/form-data',
-                'Content-Type': 'multipart/form-data'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: jsonObject
+            body: JSON.stringify(jsonObject)
         })
     }
 };

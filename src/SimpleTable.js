@@ -60,29 +60,7 @@ class SimpleTable extends React.Component {
             rows: []
         };
 
-        FileRestClient.getAllFiles("gato")
-            .then(response => {
-                    console.log(response);
-                    if (response.data !== null) {
-                        if (response.data.length > 0) {
-                            response.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
-                                Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
-                        }
-
-                        if (response.errors.length > 0) {
-                            console.error(response.errors[0].message)
-                            this.setState({
-                                error: true,
-                                errorMessage: "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde."
-                            });
-                        } else {
-                            this.setState({
-                                error: false,
-                                errorMessage: ""
-                            });
-                        }
-                    }
-                });
+        this.populateTable();
 
         /* for (var i = 0; i < 100; i++) {
             if (i % 2 === 0) {
@@ -92,6 +70,33 @@ class SimpleTable extends React.Component {
             }
         } */
     }
+
+    populateTable = () => {
+        FileRestClient.getAllFiles("gato")
+            .then(response => {
+                console.log("response: " + JSON.stringify(response));
+                if (response) {
+                    if (response.files.length > 0) {
+                        response.files.forEach(file => console.log(file));
+                        response.files.forEach(file => this.state.rows.push(new Entity(file.logical_path, "gato", new Date().toLocaleDateString(),
+                            Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
+                    }
+
+                    if (response.error) {
+                        console.error(response.errorMessage);
+                        this.setState({
+                            error: true,
+                            errorMessage: response.errorMessage
+                        });
+                    } else {
+                        this.setState({
+                            error: false,
+                            errorMessage: ""
+                        });
+                    }
+                }
+            });
+    };
 
     callbackFunction = (childData) => {
         this.setState({showContextMenu: childData})
@@ -110,42 +115,42 @@ class SimpleTable extends React.Component {
     render() {
         return (
             <Paper className={classes.root}>
-                { this.state.error ?
-                <SnackbarContent
-                    className={classes.snackbar}
-                    message={this.state.errorMessage}
-                />
-                :
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Nombre</TableCell>
-                            <TableCell align="right">Propietario</TableCell>
-                            <TableCell align="right">&Uacute;ltima Mofificaci&oacute;n</TableCell>
-                            <TableCell align="right">Tamaño del archivo</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <div>
-                        {this.state.showContextMenu ?
-                            <ZeusContextMenu
-                                parentCallback = {this.callbackFunction}
-                                mouseX={this.state.clientX - 2}
-                                mouseY={this.state.clientY - 4}
-                            /> : null}
-                    </div>
-                    <TableBody>
-                        {this.state.rows.map(row => (
-                            <TableRow key={row.name} onContextMenu={event => this.openContextMenu(event, row)}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.owner}</TableCell>
-                                <TableCell align="right">{row.lastModification}</TableCell>
-                                <TableCell align="right">{row.fileSize}</TableCell>
+                {this.state.error ?
+                    <SnackbarContent
+                        className={classes.snackbar}
+                        message={this.state.errorMessage}
+                    />
+                    :
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Nombre</TableCell>
+                                <TableCell align="right">Propietario</TableCell>
+                                <TableCell align="right">&Uacute;ltima Mofificaci&oacute;n</TableCell>
+                                <TableCell align="right">Tamaño del archivo</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table> }
+                        </TableHead>
+                        <div>
+                            {this.state.showContextMenu ?
+                                <ZeusContextMenu
+                                    parentCallback={this.callbackFunction}
+                                    mouseX={this.state.clientX - 2}
+                                    mouseY={this.state.clientY - 4}
+                                /> : null}
+                        </div>
+                        <TableBody>
+                            {this.state.rows.map(row => (
+                                <TableRow key={row.name} onContextMenu={event => this.openContextMenu(event, row)}>
+                                    <TableCell component="th" scope="row">
+                                        {row.name}
+                                    </TableCell>
+                                    <TableCell align="right">{row.owner}</TableCell>
+                                    <TableCell align="right">{row.lastModification}</TableCell>
+                                    <TableCell align="right">{row.fileSize}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>}
             </Paper>
         );
     }

@@ -14,10 +14,10 @@ const FileRestClient = {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Accept': 'multipart/form-data',
-                'Content-Type': 'multipart/form-data'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-        })
+        }).then(unprocessedResponse => unprocessedResponse.json())
     },
 
     getFile: function (value) {

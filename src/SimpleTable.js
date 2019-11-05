@@ -61,16 +61,11 @@ class SimpleTable extends React.Component {
         };
 
         FileRestClient.getAllFiles("gato")
-            .then(unprocessedResponse =>
-                unprocessedResponse.json().then(data => ({
-                        data: data,
-                        status: unprocessedResponse.status
-                    })
-                ).then(res => {
-                    if (res.data !== null) {
-                        const response = res.data;
+            .then(response => {
+                    console.log(response);
+                    if (response.data !== null) {
                         if (response.data.length > 0) {
-                            res.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
+                            response.data[0].directory.forEach(file => this.state.rows.push(new Entity(file, "gato", new Date(),
                                 Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
                         }
 
@@ -87,7 +82,7 @@ class SimpleTable extends React.Component {
                             });
                         }
                     }
-                }));
+                });
 
         /* for (var i = 0; i < 100; i++) {
             if (i % 2 === 0) {

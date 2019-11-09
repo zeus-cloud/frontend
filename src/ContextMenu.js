@@ -5,23 +5,30 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import ShareIcon from '@material-ui/icons/Share';
+import FileRestClient from "./FileRestClient";
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 export class ContextMenu extends React.Component {
 
     initialState = {
         mouseX: null,
         mouseY: null,
-        showContextMenu: false
+        showContextMenu: false,
+        file: null
+    };
+
+    downloadFile = () => {
+        FileRestClient.downloadFile(this.props.file)
     };
 
     handleClose = () => {
         this.props.parentCallback(false)
-    }
+    };
 
     constructor(props) {
         super(props);
         this.state = this.initialState;
-    }
+    };
 
     render() {
         return (
@@ -37,21 +44,25 @@ export class ContextMenu extends React.Component {
                             : undefined
                     }
                 >
-                    <MenuItem onClick={this.handleClose}>
+                    <MenuItem onClick={this.handleClose} disabled>
                         <OpenInNewIcon/>
                         Abrir
                     </MenuItem>
-                    <MenuItem onClick={this.handleClose}>
+                    <MenuItem onClick={this.handleClose} disabled>
                         <EditIcon/>
                         Modificar
                     </MenuItem>
-                    <MenuItem onClick={this.handleClose}>
+                    <MenuItem onClick={this.handleClose} disabled>
                         <DeleteForeverIcon/>
                         Borrar
                     </MenuItem>
-                    <MenuItem onClick={this.handleClose}>
+                    <MenuItem onClick={this.handleClose} disabled>
                         <ShareIcon/>
                         Compartir
+                    </MenuItem>
+                    <MenuItem onClick={this.downloadFile}>
+                        <CloudDownloadIcon/>
+                        Descargar
                     </MenuItem>
                 </Menu>
             </div>

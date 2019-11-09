@@ -105,24 +105,24 @@ function ResponsiveDrawer(props) {
                 <img className={classes.logo} src={"./daemon-tools.png"}/>
             </div>
             <Divider/>
-            <ListItem button key='Mi nube'>
+            <ListItem button key='Mi nube' disabled>
                 <ListItemIcon><CloudIcon/></ListItemIcon>
                 <ListItemText primary='Mi nube'/>
             </ListItem>
-            <ListItem button key='Compartidos conmigo'>
+            <ListItem button key='Compartidos conmigo' disabled>
                 <ListItemIcon><PeopleAltIcon/></ListItemIcon>
                 <ListItemText primary='Compartidos conmigo'/>
             </ListItem>
-            <ListItem button key='Recientes'>
+            <ListItem button key='Recientes' disabled>
                 <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
                 <ListItemText primary='Recientes'/>
             </ListItem>
             <Divider/>
-            <ListItem button key='Destacados'>
+            <ListItem button key='Destacados' disabled>
                 <ListItemIcon><StarBorderIcon/></ListItemIcon>
                 <ListItemText primary='Destacados'/>
             </ListItem>
-            <ListItem button key='Papelera'>
+            <ListItem button key='Papelera' disabled>
                 <ListItemIcon><DeleteIcon/></ListItemIcon>
                 <ListItemText primary='Papelera'/>
             </ListItem>

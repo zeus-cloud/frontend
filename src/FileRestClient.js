@@ -7,7 +7,7 @@ const FileRestClient = {
 
     getAllFiles: function (uid) {
 
-        return fetch(`http://localhost:8085/${uid}/folder`, {
+        return fetch(`http://35.228.209.99:8085/${uid}/folder`, {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -65,8 +65,8 @@ const FileRestClient = {
             postMongo: {
                 directory: this.fileRestStore.files,
                 shared: [],
-                _id: "5dc1990691f92a1ebad703c1",
-                user: "5dc1990691f92a1ebad703c0",
+                _id:  "5dc01996c7064e2ef052083b",
+                user: "5dc01196c7064e2a7152083a",
                 __v: 0
             },
             stream: {
@@ -75,7 +75,7 @@ const FileRestClient = {
             }
         };
 
-        return fetch('http://localhost:8085/gato/folder', {
+        return fetch('http://35.228.209.99:8085/gato/folder', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',

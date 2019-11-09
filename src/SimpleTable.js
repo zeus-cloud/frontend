@@ -57,7 +57,8 @@ class SimpleTable extends React.Component {
             showContextMenu: false,
             clientX: null,
             clientY: null,
-            rows: []
+            rows: [],
+            file: null
         };
 
         this.populateTable();
@@ -102,12 +103,14 @@ class SimpleTable extends React.Component {
         this.setState({showContextMenu: childData})
     };
 
-    openContextMenu = (event, row) => {
+    openContextMenu = (event, file) => {
+        console.log(file);
         event.preventDefault();
         this.setState({
             showContextMenu: true,
             clientX: event.clientX - 2,
-            clientY: event.clientY - 4
+            clientY: event.clientY - 4,
+            file: file
         })
         // <ZeusContextMenu mouseX={event.clientX - 2} mouseY={event.clientY - 4}/>
     };
@@ -136,6 +139,7 @@ class SimpleTable extends React.Component {
                                     parentCallback={this.callbackFunction}
                                     mouseX={this.state.clientX - 2}
                                     mouseY={this.state.clientY - 4}
+                                    file={this.state.file}
                                 /> : null}
                         </div>
                         <TableBody>

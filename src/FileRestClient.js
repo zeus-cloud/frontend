@@ -34,6 +34,18 @@ const FileRestClient = {
             });
     },
 
+    downloadFile: function(file) {
+        console.log(`file: ${file}`)
+        return fetch(`http://localhost:8085/gato/folder/${file.name}`, {
+            method: 'GET',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+    },
+
     getFile: function (value) {
         fetch('http://jsonplaceholder.typicode.com/users')
             .then(res => res.json())

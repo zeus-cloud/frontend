@@ -53,8 +53,8 @@ const FileRestClient = {
             postMongo: {
                 directory: this.fileRestStore.files,
                 shared: [],
-                _id: "5dc1990691f92a1ebad703c1",
-                user: "5dc1990691f92a1ebad703c0",
+                _id:  "5dc01996c7064e2ef052083b",
+                user: "5dc01196c7064e2a7152083a",
                 __v: 0
             },
             stream: {

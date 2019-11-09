@@ -92,7 +92,7 @@ class Login extends React.Component {
 
         const redirectToReferrer = this.state.redirectToReferrer;
         if (redirectToReferrer === true) {
-            if (this.state.email === "gato" && this.state.password === "gato") {
+            if (this.state.email === "admin" && this.state.password === "admin") {
                 this.props.history.push('/home')
             } else {
                 this.setState({
@@ -153,7 +153,7 @@ class Login extends React.Component {
                         {this.state.error ?
                             <SnackbarContent
                                 className={useStyles.snackbar}
-                                message='Por favor, intent&eacute; con: gato, gato'
+                                message='Por favor, intent&eacute; con: admin, admin'
                             /> : null}
                         <Grid container>
                             <Grid item xs>

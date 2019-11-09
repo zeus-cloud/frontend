@@ -78,7 +78,7 @@ class SimpleTable extends React.Component {
                 if (response) {
                     if (response.files.length > 0) {
                         response.files.forEach(file => console.log(file));
-                        response.files.forEach(file => this.state.rows.push(new Entity(file.logical_path, "gato", new Date().toLocaleDateString(),
+                        response.files.forEach(file => this.state.rows.push(new Entity(file.logical_path, "Admin", new Date().toLocaleDateString(),
                             Math.floor(Math.random() * (100 - 3 + 1)) + 3 + 'MB')))
                     }
 

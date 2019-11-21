@@ -17,8 +17,6 @@ const FileRestClient = {
         }).then(unprocessedResponse => unprocessedResponse.json())
             .then(response => {
                 if (response.data !== null) {
-                    console.log(response.data[0].directory.length);
-                    console.log(response.errors.length);
                     if (response.data[0].directory.length > 0 && response.errors.length === 0) {
                         response.data[0].directory.forEach(file => this.fileRestStore.files.push(file));
                     } else if (response.data[0].directory.length === 0 && response.errors.length === 0) {
@@ -39,8 +37,7 @@ const FileRestClient = {
             });
     },
 
-    downloadFile: function(file) {
-        console.log(`file: ${file}`)
+    downloadFile: function (file) {
         return fetch(`http://35.228.209.99:8085/gato/folder/${file.name}`, {
             method: 'GET',
             headers: {
@@ -48,7 +45,20 @@ const FileRestClient = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        })
+        }).then(response => response.json())
+            .then(response => {
+                console.log(response.data[0].buffer.data);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+
+                var blob = new Blob([new Int8Array(response.data[0].buffer.data)], {type: "octet/stream"}),
+                    url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = file.name;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }).catch(e => alert('Unexpected error, please try again. ' + e));
     },
 
     getFile: function (value) {
@@ -64,7 +74,7 @@ const FileRestClient = {
             type: "Buffer",
             data: fileDataArray
         };
-        this.fileRestStore.files.push({ logical_path: fileName });
+        this.fileRestStore.files.push({logical_path: fileName});
 
         let jsonObject = {
             postMongo: {

@@ -53,7 +53,6 @@ export class ZeusModal extends React.Component {
             reader.readAsArrayBuffer(files[0]);
 
             reader.onload = (e) => {
-                console.log(e.target.result);
                 this.setState({
                     readyFile: e.target.result,
                     fileName: files[0].name

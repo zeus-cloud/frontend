@@ -17,17 +17,22 @@ const FileRestClient = {
         }).then(unprocessedResponse => unprocessedResponse.json())
             .then(response => {
                 if (response.data !== null) {
-                    if (response.data.length > 0) {
-                        response.data[0][0].directory.forEach(file => this.fileRestStore.files.push(file));
+                    console.log(response.data[0].directory.length);
+                    console.log(response.errors.length);
+                    if (response.data[0].directory.length > 0 && response.errors.length === 0) {
+                        response.data[0].directory.forEach(file => this.fileRestStore.files.push(file));
+                    } else if (response.data[0].directory.length === 0 && response.errors.length === 0) {
+                        this.fileRestStore.error = true;
+                        this.fileRestStore.errorMessage = "No existen archivos cargados para este usuario.";
+                    } else {
+                        this.fileRestStore.error = false;
+                        this.fileRestStore.errorMessage = "";
                     }
 
                     if (response.errors.length > 0) {
                         console.error(response.errors[0].message);
                         this.fileRestStore.error = true;
                         this.fileRestStore.errorMessage = "No se pudieron traer los archivos de la base de datos. Por favor, intente más tarde.";
-                    } else {
-                        this.fileRestStore.error = false;
-                        this.fileRestStore.errorMessage = "";
                     }
                 }
                 return this.fileRestStore;
@@ -36,7 +41,7 @@ const FileRestClient = {
 
     downloadFile: function(file) {
         console.log(`file: ${file}`)
-        return fetch(`http://localhost:8085/gato/folder/${file.name}`, {
+        return fetch(`http://35.228.209.99:8085/gato/folder/${file.name}`, {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': '*',
